@@ -9,4 +9,6 @@
 - Hakutoiminto
 - Google maps -integraatio tai karttapalvelu
 - Tapahtuma kategoriat; urheilu, musiikki, kulttuuri
-- Kuvat 
+- Kuvat
+
+  # Tehtäviä
