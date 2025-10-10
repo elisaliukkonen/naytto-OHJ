@@ -7,8 +7,9 @@
 - Tapahtumat
 - Alatunniste 
 - Hakutoiminto
-- Google maps -integraatio tai karttapalvelu
+- Leafletjs tai Google maps -integraatio tai karttapalvelu
 - Tapahtuma kategoriat; urheilu, musiikki, kulttuuri
 - Kuvat
-
+- Paikallisesti tallennnettavat tiedot
   # Tehtäviä
+
