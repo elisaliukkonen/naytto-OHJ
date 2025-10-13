@@ -8,10 +8,10 @@
 
 
 # Elisa: 
-- Tapahtumien näyttöalue -> tarvitsee tehdä sitä tätä tuota
-- Tapahtumat -> tarvitsee etsiä tapahtumia sieltä täältä ja tuolta ...
-- Tapahtuma kategoriat; urheilu, musiikki, kulttuuri
-- Kuvat 
+- Tapahtumien näyttöalue -> HTML Canvas-elementti, tapahtumakortit tekstinä ja värillisina laatikoina, Canvasin päivitys kategorian vaihtuessa
+- Tapahtumat -> tapahtumien etsintä, tapahtumafunktio, JavaScript-objekti jossa tapahtumien nimet, päivämäärät ja kategoriat
+- Tapahtuma kategoriat;; urheilu, musiikki, kulttuuri -> painikkeet, funktio (joka suodattaa), klikkaus kutsuu ko. funktiota
+- Kuvat -> kuvien etsintä, lisäys ja kuva Canvalle
 
 
  ------------------------------
