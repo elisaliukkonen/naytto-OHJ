@@ -1,9 +1,9 @@
 # Tarvittavia toimintoja:
 
-
-- Ylätunniste
-- Hakuosio
-- Suodattimet
+# Onni:
+- Ylätunniste -> hakupalkki, sivun nimi, suodattimet
+- Hakuosio -> tapahtumien haku nimellä.
+- Suodattimet -> suodattaa tapahtumien haun kategorian mukaan, haun päivän mukaan, viikon ja kuukauden mukaan, haun kellon ajan mukaan.
 --------------------------  
 
 
