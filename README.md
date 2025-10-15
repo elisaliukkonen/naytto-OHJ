@@ -15,10 +15,16 @@
 
 
  ------------------------------
-- Alatunniste 
-- Hakutoiminto
-- Leafletjs tai Google maps -integraatio tai karttapalvelu
-- Paikallisesti tallennnettavat tiedot
+
+
+# Anssi:
+- Alatunniste -> Lisää automaattisesti kaikille sivuille (layout-komponentin tai templaten kautta).
+- Hakutoiminto -> Toteuta hakulogiikka. Suodata JSON-tiedostosta / localStoragesta. Lisää hakutulosten näyttökomponenttiin (lista, kortit tai karttamerkit).
+- Leafletjs -integraatio tai karttapalvelu -> Lisää karttakomponentti sivulle. Määritä kartan alkupiste ja zoom-taso. Lisää markerit (paikallisten tietojen perusteella). Toteuta markerien klikattava popup (esim. nimi, kuvaus). (Valinnaisesti) Lisää käyttäjän sijainnin näyttö (“Oma sijainti”). Tee hakutoiminto kartalle (keskitä näkymä haettuun kohteeseen).
+- Paikallisesti tallennnettavat tiedot -> tallennus localStorageen. Tiedon hakeminen.
+
+
+------------------------------
 
   # Tehtäviä
 
