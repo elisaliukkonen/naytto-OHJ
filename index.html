@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mikkelin tapahtumat</title>
+<style>
+  body {font-family: Arial, sans-serif; background:#f3f4f6; margin:0; padding:20px; color:#222;}
+  h1 {text-align:center;}
+  #buttons {text-align:center; margin-bottom:20px;}
+  button {margin:5px; padding:8px 14px; border:none; border-radius:6px; cursor:pointer; background:#2563eb; color:#fff;}
+  button:hover {background:#1d4ed8;}
+  #canvasWrap {display:flex; justify-content:center;}
+  canvas {background:#111; border-radius:10px; width:800px; height:500px;}
+</style>
+</head>
+<body>
+
+<h1>Mikkelin tapahtumat</h1>
+<div id="buttons">
+  <button onclick="filterEvents('kaikki')">Kaikki</button>
+  <button onclick="filterEvents('urheilu')">Urheilu</button>
+  <button onclick="filterEvents('musiikki')">Musiikki</button>
+  <button onclick="filterEvents('kulttuuri')">Kulttuuri</button>
+</div>
+<div id="canvasWrap">
+  <canvas id="eventCanvas" width="800" height="500"></canvas>
+</div>
+
+<script>
+const events = [];
+
+const canvas = document.getElementById("eventCanvas");
+const ctx = canvas.getContext("2d");
+
+function getColor(cat){
+  if(cat==="urheilu") return "#2563eb";
+  if(cat==="musiikki") return "#d946ef";
+  if(cat==="kulttuuri") return "#f59e0b";
+  return "#555";
+}
+
+function drawEvents(list){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  let x=30, y=30;
+  list.forEach(ev=>{
+    ctx.fillStyle=getColor(ev.category);
+    ctx.fillRect(x,y,300,80);
+    ctx.fillStyle="white";
+    ctx.font="16px Arial";
+    ctx.fillText(ev.name,x+10,y+30);
+    ctx.fillText(ev.date,x+10,y+55);
+    const img=new Image();
+    img.src=ev.image;
+    img.onload=()=>ctx.drawImage(img,x+310,y,80,80);
+    y+=100;
+  });
+}
+
+function filterEvents(cat){
+  if(cat==="kaikki") drawEvents(events);
+  else drawEvents(events.filter(e=>e.category===cat));
+}
+
+drawEvents(events);
+</script>
+
+</body>
+</html>
