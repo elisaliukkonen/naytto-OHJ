@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Äännestys sivu</title>
+  <link rel="Stylesheet" href="tyyli.css"> 
+</head>
+<body>
+<h1>Mikkelin tapahtumat</h1>
+<div id="ylätunniste" class="dropdown">
+  <input type="text" placeholder="Hae tapahtumia" id="Haku" class ="Haku">    
+  <button onclick="Suodatin()" class="dropbtn">Suodata</button>  
+      <div id="suodatin" class="dropdown-sisältö">
+        <button class="btn active" onclick="filterSelection('all')">Näytä kaikki</button>
+      <div class="Filter" style="display:flex;">
+        <button class="btn" id="päivä">Päivä</button>
+        <input id="päivä-input" type="date" class="date-picker">
+      </div>
+
+      <div class="Filter" style="display:flex;">
+        <button class="btn" id="vikko">Viikko</button>
+        <input id="vikko-input" type="week" class="date-picker">
+      </div>
+
+      <div class="Filter" style="display:flex;">
+        <button class="btn" id="kuukausi">Kuukausi</button>
+        <input id="kuukausi-input" type="month" class="date-picker">
+      </div>
+      </div>
+</div>
+<script>
+function Suodatin() {
+    document.getElementById("suodatin").classList.toggle("show");
+}
+
+function Suodatettukohta() {
+    var input, filter, div, buttons, i, txtValue;
+    input = document.getElementById("Haku");
+    filter = input.value.toUpperCase();
+    div = document.getElementById("suodatin");
+    buttons = div.getElementsByTagName("button");
+    for (i = 0; i < buttons.length; i++) {
+        txtValue = buttons[i].textContent || buttons[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            buttons[i].style.display = "";
+        } else {
+            buttons[i].style.display = "none";
+        }
+    }
+}
+
+document.getElementById("Haku").addEventListener("input", Suodatettukohta);
+
+function filterSelection(filter) {
+    var päiväRow = document.getElementById('päivä').closest('.Filter');
+    var viikkoRow = document.getElementById('vikko').closest('.Filter');
+    var kuukausiRow = document.getElementById('kuukausi').closest('.Filter');
+
+    var btns = document.querySelectorAll('#suodatin > .btn, #suodatin .Filter > .btn');
+    btns.forEach(function(b){ b.classList.remove('active'); });
+
+    if (filter === 'all' || filter === 'Näytä kaikki') {
+        päiväRow.style.display = 'flex';
+        viikkoRow.style.display = 'flex';
+        kuukausiRow.style.display = 'flex';
+        document.getElementById('päivä-input').value = '';
+        document.getElementById('vikko-input').value = '';
+        document.getElementById('kuukausi-input').value = '';
+        document.getElementById('päivä-input').style.display = 'none';
+        document.getElementById('vikko-input').style.display = 'none';
+        document.getElementById('kuukausi-input').style.display = 'none';
+    } else if (filter === 'Päivä') {
+        päiväRow.style.display = 'flex';
+        viikkoRow.style.display = '';
+        kuukausiRow.style.display = '';
+    } else if (filter === 'Viikko') {
+        päiväRow.style.display = '';
+        viikkoRow.style.display = 'flex';
+        kuukausiRow.style.display = '';
+    } else if (filter === 'Kuukausi') {
+        päiväRow.style.display = '';
+        viikkoRow.style.display = '';
+        kuukausiRow.style.display = 'flex';
+    }
+
+    var allTopBtns = Array.from(document.querySelectorAll('#suodatin .btn'));
+    var matchText = (filter === 'all') ? 'Näytä kaikki' : filter;
+    var matchBtn = allTopBtns.find(b => b.textContent.trim() === matchText);
+    if (matchBtn) matchBtn.classList.add('active');
+}
+
+function kalenteri(buttonId, inputId, filterName) {
+    const btn = document.getElementById(buttonId);
+    const input = document.getElementById(inputId);
+    if (!btn || !input) return;
+
+    btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const visible = input.style.display === 'inline-block';
+        input.style.display = visible ? 'none' : 'inline-block';
+
+        if (typeof filterSelection === 'function') {
+            filterSelection(filterName);
+        }
+
+        if (!visible) {
+            setTimeout(() => {
+                try { input.focus(); } catch (err) {}
+                if (typeof input.showPicker === 'function') {
+                    input.showPicker();
+                }
+            }, 10);
+        }
+    });
+}
+
+function Päivä() {
+  document.getElementById("päivä-input")
+    if (typeof filterSelection === 'function') {
+        filterSelection('Päivä');
+    }
+}
+kalenteri('päivä', 'päivä-input', 'Päivä');
+kalenteri('vikko', 'vikko-input', 'Viikko');
+kalenteri('kuukausi', 'kuukausi-input', 'Kuukausi');
+
+</script>
+</body>
+</html>
