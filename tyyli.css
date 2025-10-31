@@ -53,10 +53,10 @@ header {
   top: 0;
   z-index: 100;
   background-color: #f2f2f2;
-}
-
-header {
   background: linear-gradient(135deg, #2ea177, #2ea177);
   color: white;
+  border-bottom: black 2px solid;
 }
+
+
 
