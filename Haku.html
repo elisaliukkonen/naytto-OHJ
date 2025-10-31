@@ -7,28 +7,28 @@
   <link rel="Stylesheet" href="tyyli.css"> 
 </head>
 <body>
-<h1>Mikkelin tapahtumat</h1>
-<div id="ylätunniste" class="dropdown">
-  <input type="text" placeholder="Hae tapahtumia" id="Haku" class ="Haku">    
-  <button onclick="Suodatin()" class="dropbtn">Suodata</button>  
-      <div id="suodatin" class="dropdown-sisältö">
-        <button class="btn active" onclick="filterSelection('all')">Näytä kaikki</button>
+<header>
+  <h1>Mikkelin tapahtumat</h1>
+  <div id="ylätunniste" class="dropdown">
+    <input type="text" placeholder="Hae tapahtumia" id="Haku" class="Haku">    
+    <button onclick="Suodatin()" class="dropbtn">Suodata</button>  
+    <div id="suodatin" class="dropdown-sisältö">
+      <button class="btn active" onclick="filterSelection('all')">Näytä kaikki</button>
       <div class="Filter" style="display:flex;">
         <button class="btn" id="päivä">Päivä</button>
         <input id="päivä-input" type="date" class="date-picker">
       </div>
-
       <div class="Filter" style="display:flex;">
         <button class="btn" id="vikko">Viikko</button>
         <input id="vikko-input" type="week" class="date-picker">
       </div>
-
       <div class="Filter" style="display:flex;">
         <button class="btn" id="kuukausi">Kuukausi</button>
         <input id="kuukausi-input" type="month" class="date-picker">
       </div>
-      </div>
-</div>
+    </div>
+  </div>
+</header>
 <script>
 function Suodatin() {
     document.getElementById("suodatin").classList.toggle("show");
