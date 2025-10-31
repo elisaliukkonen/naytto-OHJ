@@ -1,5 +1,5 @@
 .dropbtn {
-  background-color: #04AA6D;
+  background-color: #09b173;
   color: white;
   padding: 10px;
   font-size: 12px;
@@ -17,7 +17,7 @@
 .dropdown-sisältö {
   display: none;
   position: absolute;
-  top: cal(100% + 6px);
+  top: calc(100% + 6px);
   left: 58%;
   transform: translateX(-50%);
   background-color: white;
@@ -43,7 +43,20 @@ h1 {
 }
 
 .btn {
-  background-color: rgb(60, 192, 60);
+  background-color: rgb(60, 187, 60);
   border-radius: 1px;
   border-color: whitesmoke;
 }
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #f2f2f2;
+}
+
+header {
+  background: linear-gradient(135deg, #2ea177, #2ea177);
+  color: white;
+}
+
