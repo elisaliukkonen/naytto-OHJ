@@ -57,9 +57,9 @@ function filterSelection(filter) {
     var viikkoRow = document.getElementById('vikko').closest('.Filter');
     var kuukausiRow = document.getElementById('kuukausi').closest('.Filter');
 
-    var dayInput = document.getElementById('päivä-input');
-    var weekInput = document.getElementById('vikko-input');
-    var monthInput = document.getElementById('kuukausi-input');
+    var PäiväInput = document.getElementById('päivä-input');
+    var ViikkoInput = document.getElementById('vikko-input');
+    var KuukausiInput = document.getElementById('kuukausi-input');
 
     var btns = document.querySelectorAll('#suodatin > .btn, #suodatin .Filter > .btn');
     btns.forEach(function(b){ b.classList.remove('active'); });
@@ -78,20 +78,20 @@ function filterSelection(filter) {
         päiväRow.style.display = 'flex';
         viikkoRow.style.display = 'empty';
         kuukausiRow.style.display = 'empty';
-        weekInput.value = '';
-        monthInput.value = '';
+        ViikkoInput.value = '';
+        KuukausiInput.value = '';
     } else if (filter === 'Viikko') {
         päiväRow.style.display = 'empty';
         viikkoRow.style.display = 'flex';
         kuukausiRow.style.display = 'empty';
-        dayInput.value = '';
-        monthInput.value = '';
+        PäiväInput.value = '';
+        KuukausiInput.value = '';
     } else if (filter === 'Kuukausi') {
         päiväRow.style.display = 'empty';
         viikkoRow.style.display = 'empty';
         kuukausiRow.style.display = 'flex';
-        dayInput.value = '';
-        weekInput.value = '';
+        PäiväInput.value = '';
+        ViikkoInput.value = '';
     }
 
     var allTopBtns = Array.from(document.querySelectorAll('#suodatin .btn'));
