@@ -57,6 +57,10 @@ function filterSelection(filter) {
     var viikkoRow = document.getElementById('vikko').closest('.Filter');
     var kuukausiRow = document.getElementById('kuukausi').closest('.Filter');
 
+    var dayInput = document.getElementById('päivä-input');
+    var weekInput = document.getElementById('vikko-input');
+    var monthInput = document.getElementById('kuukausi-input');
+
     var btns = document.querySelectorAll('#suodatin > .btn, #suodatin .Filter > .btn');
     btns.forEach(function(b){ b.classList.remove('active'); });
 
@@ -72,16 +76,22 @@ function filterSelection(filter) {
         document.getElementById('kuukausi-input').style.display = 'none';
     } else if (filter === 'Päivä') {
         päiväRow.style.display = 'flex';
-        viikkoRow.style.display = '';
-        kuukausiRow.style.display = '';
+        viikkoRow.style.display = 'empty';
+        kuukausiRow.style.display = 'empty';
+        weekInput.value = '';
+        monthInput.value = '';
     } else if (filter === 'Viikko') {
-        päiväRow.style.display = '';
+        päiväRow.style.display = 'empty';
         viikkoRow.style.display = 'flex';
-        kuukausiRow.style.display = '';
+        kuukausiRow.style.display = 'empty';
+        dayInput.value = '';
+        monthInput.value = '';
     } else if (filter === 'Kuukausi') {
-        päiväRow.style.display = '';
-        viikkoRow.style.display = '';
+        päiväRow.style.display = 'empty';
+        viikkoRow.style.display = 'empty';
         kuukausiRow.style.display = 'flex';
+        dayInput.value = '';
+        weekInput.value = '';
     }
 
     var allTopBtns = Array.from(document.querySelectorAll('#suodatin .btn'));
@@ -128,5 +138,3 @@ kalenteri('kuukausi', 'kuukausi-input', 'Kuukausi');
 </script>
 </body>
 </html>
-
-
