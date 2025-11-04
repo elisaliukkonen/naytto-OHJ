@@ -57,10 +57,6 @@ function filterSelection(filter) {
     var viikkoRow = document.getElementById('vikko').closest('.Filter');
     var kuukausiRow = document.getElementById('kuukausi').closest('.Filter');
 
-    var PäiväInput = document.getElementById('päivä-input');
-    var ViikkoInput = document.getElementById('vikko-input');
-    var KuukausiInput = document.getElementById('kuukausi-input');
-
     var btns = document.querySelectorAll('#suodatin > .btn, #suodatin .Filter > .btn');
     btns.forEach(function(b){ b.classList.remove('active'); });
 
@@ -76,24 +72,29 @@ function filterSelection(filter) {
         document.getElementById('kuukausi-input').style.display = 'none';
     } else if (filter === 'Päivä') {
         päiväRow.style.display = 'flex';
-        viikkoRow.style.display = 'empty';
-        kuukausiRow.style.display = 'empty';
-        ViikkoInput.value = '';
-        KuukausiInput.value = '';
-    } else if (filter === 'Viikko') {
-        päiväRow.style.display = 'empty';
         viikkoRow.style.display = 'flex';
-        kuukausiRow.style.display = 'empty';
-        PäiväInput.value = '';
-        KuukausiInput.value = '';
-    } else if (filter === 'Kuukausi') {
-        päiväRow.style.display = 'empty';
-        viikkoRow.style.display = 'empty';
         kuukausiRow.style.display = 'flex';
-        PäiväInput.value = '';
-        ViikkoInput.value = '';
+        document.getElementById('vikko-input').value = '';
+        document.getElementById('kuukausi-input').value = '';
+        document.getElementById('vikko-input').style.display = 'none';
+        document.getElementById('kuukausi-input').style.display = 'none';
+    } else if (filter === 'Viikko') {
+        päiväRow.style.display = 'flex';
+        viikkoRow.style.display = 'flex';
+        kuukausiRow.style.display = 'flex';
+        document.getElementById('päivä-input').value = '';
+        document.getElementById('kuukausi-input').value = '';
+        document.getElementById('päivä-input').style.display = 'none';
+        document.getElementById('kuukausi-input').style.display = 'none';
+    } else if (filter === 'Kuukausi') {
+        päiväRow.style.display = 'flex';
+        viikkoRow.style.display = 'flex';
+        kuukausiRow.style.display = 'flex';
+        document.getElementById('päivä-input').value = '';
+        document.getElementById('vikko-input').value = '';
+        document.getElementById('päivä-input').style.display = 'none';
+        document.getElementById('vikko-input').style.display = 'none';
     }
-
     var allTopBtns = Array.from(document.querySelectorAll('#suodatin .btn'));
     var matchText = (filter === 'all') ? 'Näytä kaikki' : filter;
     var matchBtn = allTopBtns.find(b => b.textContent.trim() === matchText);
