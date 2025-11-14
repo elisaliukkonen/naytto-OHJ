@@ -20,7 +20,7 @@
       </div>
       <div class="Filter" style="display:flex;">
         <button class="btn" id="vikko">Viikko</button>
-        <input id="vikko-input" type="week" class="date-picker">
+        <input id="viikko-input" type="week" class="date-picker">
       </div>
       <div class="Filter" style="display:flex;">
         <button class="btn" id="kuukausi">Kuukausi</button>
@@ -30,6 +30,7 @@
   </div>
 </header>
 <script>
+    
 function Suodatin() {
     document.getElementById("suodatin").classList.toggle("show");
 }
@@ -65,18 +66,18 @@ function filterSelection(filter) {
         viikkoRow.style.display = 'flex';
         kuukausiRow.style.display = 'flex';
         document.getElementById('päivä-input').value = '';
-        document.getElementById('vikko-input').value = '';
+        document.getElementById('viikko-input').value = '';
         document.getElementById('kuukausi-input').value = '';
         document.getElementById('päivä-input').style.display = 'none';
-        document.getElementById('vikko-input').style.display = 'none';
+        document.getElementById('viikko-input').style.display = 'none';
         document.getElementById('kuukausi-input').style.display = 'none';
     } else if (filter === 'Päivä') {
         päiväRow.style.display = 'flex';
         viikkoRow.style.display = 'flex';
         kuukausiRow.style.display = 'flex';
-        document.getElementById('vikko-input').value = '';
+        document.getElementById('viikko-input').value = '';
         document.getElementById('kuukausi-input').value = '';
-        document.getElementById('vikko-input').style.display = 'none';
+        document.getElementById('viikko-input').style.display = 'none';
         document.getElementById('kuukausi-input').style.display = 'none';
     } else if (filter === 'Viikko') {
         päiväRow.style.display = 'flex';
@@ -91,9 +92,9 @@ function filterSelection(filter) {
         viikkoRow.style.display = 'flex';
         kuukausiRow.style.display = 'flex';
         document.getElementById('päivä-input').value = '';
-        document.getElementById('vikko-input').value = '';
+        document.getElementById('viikko-input').value = '';
         document.getElementById('päivä-input').style.display = 'none';
-        document.getElementById('vikko-input').style.display = 'none';
+        document.getElementById('viikko-input').style.display = 'none';
     }
     var allTopBtns = Array.from(document.querySelectorAll('#suodatin .btn'));
     var matchText = (filter === 'all') ? 'Näytä kaikki' : filter;
@@ -127,9 +128,8 @@ function kalenteri(buttonId, inputId, filterName) {
 }
 
 kalenteri('päivä', 'päivä-input', 'Päivä');
-kalenteri('vikko', 'vikko-input', 'Viikko');
+kalenteri('vikko', 'viikko-input', 'Viikko');
 kalenteri('kuukausi', 'kuukausi-input', 'Kuukausi');
-
 </script>
 </body>
 </html>
