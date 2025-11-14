@@ -19,7 +19,7 @@
         <input id="päivä-input" type="date" class="date-picker">
       </div>
       <div class="Filter" style="display:flex;">
-        <button class="btn" id="vikko">Viikko</button>
+        <button class="btn" id="viikko">Viikko</button>
         <input id="viikko-input" type="week" class="date-picker">
       </div>
       <div class="Filter" style="display:flex;">
@@ -55,7 +55,7 @@ document.getElementById("Haku").addEventListener("input", Suodatettukohta);
 
 function filterSelection(filter) {
     var päiväRow = document.getElementById('päivä').closest('.Filter');
-    var viikkoRow = document.getElementById('vikko').closest('.Filter');
+    var viikkoRow = document.getElementById('viikko').closest('.Filter');
     var kuukausiRow = document.getElementById('kuukausi').closest('.Filter');
 
     var btns = document.querySelectorAll('#suodatin > .btn, #suodatin .Filter > .btn');
@@ -128,7 +128,7 @@ function kalenteri(buttonId, inputId, filterName) {
 }
 
 kalenteri('päivä', 'päivä-input', 'Päivä');
-kalenteri('vikko', 'viikko-input', 'Viikko');
+kalenteri('viikko', 'viikko-input', 'Viikko');
 kalenteri('kuukausi', 'kuukausi-input', 'Kuukausi');
 </script>
 </body>
