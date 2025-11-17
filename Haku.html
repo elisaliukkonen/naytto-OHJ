@@ -78,7 +78,7 @@ function filterSelection(filter) {
       document.getElementById('aika-päivä-al'),
       document.getElementById('aika-päivä-lo'),
       document.getElementById('aika-vikko-al'),
-      document.getElementById('aika-viikko-lo'),
+      document.getElementById('aika-vikko-lo'),
       document.getElementById('aika-kuukausi-al'),
       document.getElementById('aika-kuukausi-lo')
     ];
@@ -119,13 +119,32 @@ function filterSelection(filter) {
         if (monthTimeA) monthTimeA.style.display = 'inline-block';
     }
 
+    var startTime, endTime;
+    if (dayTimeA.style.display === 'inline-block') {
+        startTime = document.getElementById('aika-päivä-al').value;
+        endTime = document.getElementById('aika-päivä-lo').value;
+    } else if (weekTimeA.style.display === 'inline-block') {
+        startTime = document.getElementById('aika-vikko-al').value;
+        endTime = document.getElementById('aika-vikko-lo').value;
+    } else if (monthTimeA.style.display === 'inline-block') {
+        startTime = document.getElementById('aika-kuukausi-al').value;
+        endTime = document.getElementById('aika-kuukausi-lo').value;
+    }
+
+    if (startTime && endTime) {
+
+        const startDate = new Date(startTime);
+        const endDate = new Date(endTime);
+
+    }
+
     var allTopBtns = Array.from(document.querySelectorAll('#suodatin .btn'));
     var matchText = (filter === 'all') ? 'Näytä kaikki' : filter;
     var matchBtn = allTopBtns.find(b => b.textContent.trim() === matchText);
     if (matchBtn) matchBtn.classList.add('active');
 }
 
-function setupAikaToggle(btnId, inputStartId, inputEndId) {
+function Aikavälilaitto(btnId, inputStartId, inputEndId) {
   var btn = document.getElementById(btnId);
   var inA = document.getElementById(inputStartId);
   var inB = document.getElementById(inputEndId);
@@ -143,10 +162,9 @@ function setupAikaToggle(btnId, inputStartId, inputEndId) {
     }
   });
 }
-
-setupAikaToggle('aika-päivä', 'aika-päivä-al', 'aika-päivä-lo');
-setupAikaToggle('aika-viikko', 'aika-vikko-al', 'aika-viikko-lo');
-setupAikaToggle('aika-kuukausi', 'aika-kuukausi-al', 'aika-kuukausi-lo');
+ Aikavälilaitto('aika-päivä', 'aika-päivä-al', 'aika-päivä-lo');
+ Aikavälilaitto('aika-viikko', 'aika-vikko-al', 'aika-viikko-lo');
+ Aikavälilaitto('aika-kuukausi', 'aika-kuukausi-al', 'aika-kuukausi-lo');
 
 function kalenteri(buttonId, inputId, filterName) {
     const btn = document.getElementById(buttonId);
