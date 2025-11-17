@@ -1,7 +1,7 @@
 .dropbtn {
   background-color: #09b173;
   color: white;
-  padding: 10px;
+  padding: 8px;
   font-size: 12px;
   border: none;
   cursor: pointer;
@@ -31,6 +31,16 @@
 .Filter .date-picker {
   display:none; align-items:center; gap:8px; margin-top:6px
 }
+
+.btn-aika {
+  display: none;
+  margin-left: 8px;
+}
+.time-picker {
+  display: none;
+  margin-left: 6px;
+}
+
 .Haku {
   margin-right: 10px;
   text-align: center;
@@ -54,9 +64,6 @@ header {
   z-index: 100;
   background-color: #f2f2f2;
   background: linear-gradient(135deg, #2ea177, #2ea177);
-  color: white;
+  color: white;  
   border-bottom: black 2px solid;
 }
-
-
-
