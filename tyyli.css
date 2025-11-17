@@ -35,7 +35,11 @@
 .btn-aika {
   display: none;
   margin-left: 8px;
+  background-color: rgb(60, 187, 60);
+  border-radius: 1px;
+  border-color: whitesmoke;
 }
+
 .time-picker {
   display: none;
   margin-left: 6px;
@@ -67,3 +71,4 @@ header {
   color: white;  
   border-bottom: black 2px solid;
 }
+
