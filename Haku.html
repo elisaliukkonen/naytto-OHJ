@@ -25,7 +25,7 @@
         <button class="btn" id="viikko">Viikko</button>
         <input id="viikko-input" type="week" class="date-picker">
         <button class="btn-aika" id="aika-viikko">Aika välillä</button>
-        <input id="aika-vikko-al" type="time" class="time-picker"> 
+        <input id="aika-viikko-al" type="time" class="time-picker"> 
         <input id="aika-viikko-lo" type="time" class="time-picker">
       </div>
       <div class="Filter" style="display:flex;">
@@ -38,110 +38,142 @@
     </div>
   </div>
 </header>
+
 <script>
-    
+
+let selectedDate = null;
+let selectedWeek = null;
+let selectedMonth = null;
+let startTime = null;
+let endTime = null;
+
+function Suodatapäivällä() {
+  let filtered = events;
+
+  if (selectedDate) {
+    filtered = filtered.filter(e => e.date === selectedDate);
+  }
+
+  if (selectedWeek) {
+    const [year, week] = selectedWeek.split('-W');
+    filtered = filtered.filter(e => {
+      const eDate = new Date(e.date);
+      const eYear = eDate.getFullYear();
+      const eWeek = Viikkonumero(eDate);
+      return eYear === parseInt(year) && eWeek === parseInt(week);
+    });
+  }
+
+  if (selectedMonth) {
+    const [year, month] = selectedMonth.split('-');
+    filtered = filtered.filter(e => {
+      const eParts = e.date.split('-');
+      return eParts[0] === year && eParts[1] === month;
+    });
+  }
+
+  if (startTime && endTime) {
+    filtered = filtered.filter(e => {
+      const eTime = e.time.replace(':', '');
+      const start = startTime.replace(':', '');
+      const end = endTime.replace(':', '');
+      return eTime >= start && eTime <= end;
+    });
+  }
+
+  displayEvents(filtered);
+}
+
+function Viikkonumero(date) {
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+}
+
 function Suodatin() {
-    document.getElementById("suodatin").classList.toggle("show");
+  document.getElementById("suodatin").classList.toggle("show");
 }
 
 function Suodatettukohta() {
-    var input, filter, div, buttons, i, txtValue;
-    input = document.getElementById("Haku");
-    filter = input.value.toUpperCase();
-    div = document.getElementById("suodatin");
-    buttons = div.getElementsByTagName("button");
-    for (i = 0; i < buttons.length; i++) {
-        txtValue = buttons[i].textContent || buttons[i].innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            buttons[i].style.display = "";
-        } else {
-            buttons[i].style.display = "none";
-        }
-    }
+  var input = document.getElementById("Haku");
+  var filter = input.value.toUpperCase();
+  var filtered = events.filter(e => e.name.toUpperCase().indexOf(filter) > -1);
+  displayEvents(filtered);
 }
 
 document.getElementById("Haku").addEventListener("input", Suodatettukohta);
 
 function filterSelection(filter) {
-    var päiväRow = document.getElementById('päivä').closest('.Filter');
-    var viikkoRow = document.getElementById('viikko').closest('.Filter');
-    var kuukausiRow = document.getElementById('kuukausi').closest('.Filter');
+  var päiväRow = document.getElementById('päivä').closest('.Filter');
+  var viikkoRow = document.getElementById('viikko').closest('.Filter');
+  var kuukausiRow = document.getElementById('kuukausi').closest('.Filter');
 
-    var dayInput = document.getElementById('päivä-input');
-    var weekInput = document.getElementById('viikko-input');
-    var monthInput = document.getElementById('kuukausi-input');
-    var dayTimeA = document.getElementById('aika-päivä');
-    var weekTimeA = document.getElementById('aika-viikko');
-    var monthTimeA = document.getElementById('aika-kuukausi');
+  var dayInput = document.getElementById('päivä-input');
+  var weekInput = document.getElementById('viikko-input');
+  var monthInput = document.getElementById('kuukausi-input');
+  var dayTimeA = document.getElementById('aika-päivä');
+  var weekTimeA = document.getElementById('aika-viikko');
+  var monthTimeA = document.getElementById('aika-kuukausi');
 
-    var timeInputs = [
-      document.getElementById('aika-päivä-al'),
-      document.getElementById('aika-päivä-lo'),
-      document.getElementById('aika-vikko-al'),
-      document.getElementById('aika-vikko-lo'),
-      document.getElementById('aika-kuukausi-al'),
-      document.getElementById('aika-kuukausi-lo')
-    ];
+  var timeInputs = [
+    document.getElementById('aika-päivä-al'),
+    document.getElementById('aika-päivä-lo'),
+    document.getElementById('aika-viikko-al'),
+    document.getElementById('aika-viikko-lo'),
+    document.getElementById('aika-kuukausi-al'),
+    document.getElementById('aika-kuukausi-lo')
+  ];
 
-    document.querySelectorAll('#suodatin .btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('#suodatin .btn').forEach(function(b){ b.classList.remove('active'); });
 
-    dayInput.value = '';
-    weekInput.value = '';
-    monthInput.value = '';
-    timeInputs.forEach(i => { if(i) { i.value = ''; i.style.display = 'none'; } });
+  dayInput.value = '';
+  weekInput.value = '';
+  monthInput.value = '';
+  timeInputs.forEach(i => { if(i) { i.value = ''; i.style.display = 'none'; } });
 
-    dayInput.style.display = 'none';
-    weekInput.style.display = 'none';
-    monthInput.style.display = 'none';
-    [dayTimeA, weekTimeA, monthTimeA].forEach(b => { if(b) b.style.display = 'none'; });
+  selectedDate = null;
+  selectedWeek = null;
+  selectedMonth = null;
+  startTime = null;
+  endTime = null;
 
-    if (filter === 'all' || filter === 'Näytä kaikki') {
-        päiväRow.style.display = 'flex';
-        viikkoRow.style.display = 'flex';
-        kuukausiRow.style.display = 'flex';
-    } else if (filter === 'Päivä') {
-        päiväRow.style.display = 'flex';
-        viikkoRow.style.display = 'none';
-        kuukausiRow.style.display = 'none';
-        dayInput.style.display = 'inline-block';
-        if (dayTimeA) dayTimeA.style.display = 'inline-block';
-    } else if (filter === 'Viikko') {
-        päiväRow.style.display = 'none';
-        viikkoRow.style.display = 'flex';
-        kuukausiRow.style.display = 'none';
-        weekInput.style.display = 'inline-block';
-        if (weekTimeA) weekTimeA.style.display = 'inline-block';
-    } else if (filter === 'Kuukausi') {
-        päiväRow.style.display = 'none';
-        viikkoRow.style.display = 'none';
-        kuukausiRow.style.display = 'flex';
-        monthInput.style.display = 'inline-block';
-        if (monthTimeA) monthTimeA.style.display = 'inline-block';
-    }
+  dayInput.style.display = 'none';
+  weekInput.style.display = 'none';
+  monthInput.style.display = 'none';
+  [dayTimeA, weekTimeA, monthTimeA].forEach(b => { if(b) b.style.display = 'none'; });
 
-    var startTime, endTime;
-    if (dayTimeA.style.display === 'inline-block') {
-        startTime = document.getElementById('aika-päivä-al').value;
-        endTime = document.getElementById('aika-päivä-lo').value;
-    } else if (weekTimeA.style.display === 'inline-block') {
-        startTime = document.getElementById('aika-vikko-al').value;
-        endTime = document.getElementById('aika-vikko-lo').value;
-    } else if (monthTimeA.style.display === 'inline-block') {
-        startTime = document.getElementById('aika-kuukausi-al').value;
-        endTime = document.getElementById('aika-kuukausi-lo').value;
-    }
+  if (filter === 'all' || filter === 'Näytä kaikki') {
+    päiväRow.style.display = 'flex';
+    viikkoRow.style.display = 'flex';
+    kuukausiRow.style.display = 'flex';
+  } else if (filter === 'Päivä') {
+    päiväRow.style.display = 'flex';
+    viikkoRow.style.display = 'none';
+    kuukausiRow.style.display = 'none';
+    dayInput.style.display = 'inline-block';
+    if (dayTimeA) dayTimeA.style.display = 'inline-block';
+  } else if (filter === 'Viikko') {
+    päiväRow.style.display = 'none';
+    viikkoRow.style.display = 'flex';
+    kuukausiRow.style.display = 'none';
+    weekInput.style.display = 'inline-block';
+    if (weekTimeA) weekTimeA.style.display = 'inline-block';
+  } else if (filter === 'Kuukausi') {
+    päiväRow.style.display = 'none';
+    viikkoRow.style.display = 'none';
+    kuukausiRow.style.display = 'flex';
+    monthInput.style.display = 'inline-block';
+    if (monthTimeA) monthTimeA.style.display = 'inline-block';
+  }
 
-    if (startTime && endTime) {
+  var allTopBtns = Array.from(document.querySelectorAll('#suodatin .btn'));
+  var matchText = (filter === 'all') ? 'Näytä kaikki' : filter;
+  var matchBtn = allTopBtns.find(b => b.textContent.trim() === matchText);
+  if (matchBtn) matchBtn.classList.add('active');
 
-        const startDate = new Date(startTime);
-        const endDate = new Date(endTime);
-
-    }
-
-    var allTopBtns = Array.from(document.querySelectorAll('#suodatin .btn'));
-    var matchText = (filter === 'all') ? 'Näytä kaikki' : filter;
-    var matchBtn = allTopBtns.find(b => b.textContent.trim() === matchText);
-    if (matchBtn) matchBtn.classList.add('active');
+  Suodatapäivällä();
 }
 
 function Aikavälilaitto(btnId, inputStartId, inputEndId) {
@@ -159,41 +191,71 @@ function Aikavälilaitto(btnId, inputStartId, inputEndId) {
       setTimeout(()=>{ try { inA.focus(); } catch(e){} }, 10);
     } else {
       inA.value = ''; inB.value = '';
+      startTime = null;
+      endTime = null;
     }
+    Suodatapäivällä();
   });
 }
- Aikavälilaitto('aika-päivä', 'aika-päivä-al', 'aika-päivä-lo');
- Aikavälilaitto('aika-viikko', 'aika-vikko-al', 'aika-viikko-lo');
- Aikavälilaitto('aika-kuukausi', 'aika-kuukausi-al', 'aika-kuukausi-lo');
+
+Aikavälilaitto('aika-päivä', 'aika-päivä-al', 'aika-päivä-lo');
+Aikavälilaitto('aika-viikko', 'aika-viikko-al', 'aika-viikko-lo');
+Aikavälilaitto('aika-kuukausi', 'aika-kuukausi-al', 'aika-kuukausi-lo');
 
 function kalenteri(buttonId, inputId, filterName) {
-    const btn = document.getElementById(buttonId);
-    const input = document.getElementById(inputId);
-    if (!btn || !input) return;
+  const btn = document.getElementById(buttonId);
+  const input = document.getElementById(inputId);
+  if (!btn || !input) return;
 
-    btn.addEventListener('click', function (e) {
-        e.preventDefault();
-        const visible = input.style.display === 'inline-block';
-        input.style.display = visible ? 'none' : 'inline-block';
+  btn.addEventListener('click', function (e) {
+    e.preventDefault();
+    filterSelection(filterName);
+    setTimeout(() => {
+      try { input.focus(); } catch (err) {}
+      if (typeof input.showPicker === 'function') {
+        input.showPicker();
+      }
+    }, 10);
+  });
 
-        if (typeof filterSelection === 'function') {
-            filterSelection(filterName);
-        }
-
-        if (!visible) {
-            setTimeout(() => {
-                try { input.focus(); } catch (err) {}
-                if (typeof input.showPicker === 'function') {
-                    input.showPicker();
-                }
-            }, 10);
-        }
-    });
+  input.addEventListener('change', function() {
+    if (filterName === 'Päivä') selectedDate = this.value;
+    if (filterName === 'Viikko') selectedWeek = this.value;
+    if (filterName === 'Kuukausi') selectedMonth = this.value;
+    Suodatapäivällä();
+  });
 }
 
 kalenteri('päivä', 'päivä-input', 'Päivä');
 kalenteri('viikko', 'viikko-input', 'Viikko');
 kalenteri('kuukausi', 'kuukausi-input', 'Kuukausi');
+
+document.getElementById('aika-päivä-al').addEventListener('change', function() {
+  startTime = this.value;
+  Suodatapäivällä();
+});
+document.getElementById('aika-päivä-lo').addEventListener('change', function() {
+  endTime = this.value;
+  Suodatapäivällä();
+});
+document.getElementById('aika-viikko-al').addEventListener('change', function() {
+  startTime = this.value;
+  Suodatapäivällä();
+});
+document.getElementById('aika-viikko-lo').addEventListener('change', function() {
+  endTime = this.value;
+  Suodatapäivällä();
+});
+document.getElementById('aika-kuukausi-al').addEventListener('change', function() {
+  startTime = this.value;
+  Suodatapäivällä();
+});
+document.getElementById('aika-kuukausi-lo').addEventListener('change', function() {
+  endTime = this.value;
+  Suodatapäivällä();
+});
+
+displayEvents(events);
 </script>
 </body>
 </html>
