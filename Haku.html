@@ -1,262 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tapahtumat</title>
-  <link rel="Stylesheet" href="tyyli.css"> 
+  <title>Mikkelin tapahtumat</title>
+  <link rel="stylesheet" href="tyyli.css">
 </head>
 <body>
+
 <header>
   <h1>Mikkelin tapahtumat</h1>
-  <div id="ylätunniste" class="dropdown">
-    <input type="text" placeholder="Hae tapahtumia" id="Haku" class="Haku">    
-    <button onclick="Suodatin()" class="dropbtn">Suodata</button>  
-    <div id="suodatin" class="dropdown-sisältö">
-      <button class="btn active" onclick="filterSelection('all')">Näytä kaikki</button>
-      <div class="Filter" style="display:flex;">
-        <button class="btn" id="päivä">Päivä</button>
-        <input id="päivä-input" type="date" class="date-picker">
-        <button class="btn-aika" id="aika-päivä">Aika välillä</button>
-        <input id="aika-päivä-al" type="time" class="time-picker"> 
-        <input id="aika-päivä-lo" type="time" class="time-picker">
-      </div>
-      <div class="Filter" style="display:flex;">
-        <button class="btn" id="viikko">Viikko</button>
-        <input id="viikko-input" type="week" class="date-picker">
-        <button class="btn-aika" id="aika-viikko">Aika välillä</button>
-        <input id="aika-viikko-al" type="time" class="time-picker"> 
-        <input id="aika-viikko-lo" type="time" class="time-picker">
-      </div>
-      <div class="Filter" style="display:flex;">
-        <button class="btn" id="kuukausi" >Kuukausi</button>
-        <input id="kuukausi-input" type="month" class="date-picker">
-        <button class="btn-aika" id="aika-kuukausi">Aika välillä</button>
-        <input id="aika-kuukausi-al" type="time" class="time-picker"> 
-        <input id="aika-kuukausi-lo" type="time" class="time-picker">
+  <div class="header-controls">
+    <input type="text" id="searchInput" class="search-input" placeholder="Hae tapahtumaa...">
+
+    <div class="dropdown">
+      <button onclick="toggleDropdown()" class="dropbtn">Suodata päivämäärällä</button>
+      <div id="dateDropdown" class="dropdown-content">
+
+        <div class="filter-row">
+          <button class="btn active" onclick="Suodatavalitut('all')">Näytä kaikki</button>
+        </div>
+
+        <div class="filter-row">
+          <button class="btn" onclick="showDateFilter('paiva')">Päivä</button>
+          <input id="paivaInput" type="date" class="date-picker">
+          <button class="btn-aika" id="aikaPaivaBtn" onclick="Aikavalinta('paiva')">Aika välillä</button>
+          <input id="aikaPaivaAl" type="time" class="time-picker">
+          <input id="aikaPaivaLo" type="time" class="time-picker">
+        </div>
+
+        <div class="filter-row">
+          <button class="btn" onclick="showDateFilter('viikko')">Viikko</button>
+          <input id="viikkoInput" type="week" class="date-picker">
+          <button class="btn-aika" id="aikaViikkoBtn" onclick="Aikavalinta('viikko')">Aika välillä</button>
+          <input id="aikaViikkoAl" type="time" class="time-picker">
+          <input id="aikaViikkoLo" type="time" class="time-picker">
+        </div>
+
+        <div class="filter-row">
+          <button class="btn" onclick="showDateFilter('kuukausi')">Kuukausi</button>
+          <input id="kuukausiInput" type="month" class="date-picker">
+          <button class="btn-aika" id="aikaKuukausiBtn" onclick="Aikavalinta('kuukausi')">Aika välillä</button>
+          <input id="aikaKuukausiAl" type="time" class="time-picker">
+          <input id="aikaKuukausiLo" type="time" class="time-picker">
+        </div>
+
       </div>
     </div>
   </div>
 </header>
 
+
 <script>
+  let selectedDate = null;
+  let selectedWeek = null;
+  let selectedMonth = null;
+  let startTime = null;
+  let endTime = null;
 
-let selectedDate = null;
-let selectedWeek = null;
-let selectedMonth = null;
-let startTime = null;
-let endTime = null;
-
-function Suodatapäivällä() {
-  let filtered = events;
-
-  if (selectedDate) {
-    filtered = filtered.filter(e => e.date === selectedDate);
+  function toggleDropdown() {
+    document.getElementById('dateDropdown').classList.toggle('show');
   }
 
-  if (selectedWeek) {
-    const [year, week] = selectedWeek.split('-W');
-    filtered = filtered.filter(e => {
-      const eDate = new Date(e.date);
-      const eYear = eDate.getFullYear();
-      const eWeek = Viikkonumero(eDate);
-      return eYear === parseInt(year) && eWeek === parseInt(week);
+  function Suodatavalitut() {
+    selectedDate = null;
+    selectedWeek = null;
+    selectedMonth = null;
+    startTime = null;
+    endTime = null;
+
+    document.querySelectorAll('.date-picker').forEach(el => {
+      el.style.display = 'none';
+      el.value = '';
     });
-  }
 
-  if (selectedMonth) {
-    const [year, month] = selectedMonth.split('-');
-    filtered = filtered.filter(e => {
-      const eParts = e.date.split('-');
-      return eParts[0] === year && eParts[1] === month;
+    document.querySelectorAll('.btn-aika').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.time-picker').forEach(el => {
+      el.style.display = 'none';
+      el.value = '';
     });
+
+    document.querySelectorAll('#dateDropdown .btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
   }
 
-  if (startTime && endTime) {
-    filtered = filtered.filter(e => {
-      const eTime = e.time.replace(':', '');
-      const start = startTime.replace(':', '');
-      const end = endTime.replace(':', '');
-      return eTime >= start && eTime <= end;
+  function showDateFilter(type) {
+    document.querySelectorAll('.date-picker').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.btn-aika').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.time-picker').forEach(el => {
+      el.style.display = 'none';
+      el.value = '';
     });
+
+    if (type === 'paiva') {
+      const input = document.getElementById('paivaInput');
+      input.style.display = 'inline-block';
+      document.getElementById('aikaPaivaBtn').style.display = 'inline-block';
+
+      input.onchange = function () {
+        if (this.value) {
+          const [year, month, day] = this.value.split('-');
+          selectedDate = `${parseInt(day)}.${parseInt(month)}.${year}`;
+        } else {
+          selectedDate = null;
+        }
+      };
+    }
+
+    if (type === 'viikko') {
+      const input = document.getElementById('viikkoInput');
+      input.style.display = 'inline-block';
+      document.getElementById('aikaViikkoBtn').style.display = 'inline-block';
+
+      input.onchange = function () {
+        selectedWeek = this.value;
+      };
+    }
+
+    if (type === 'kuukausi') {
+      const input = document.getElementById('kuukausiInput');
+      input.style.display = 'inline-block';
+      document.getElementById('aikaKuukausiBtn').style.display = 'inline-block';
+
+      input.onchange = function () {
+        if (this.value) {
+          const [year, month] = this.value.split('-');
+          selectedMonth = `${parseInt(month)}.${year}`;
+        } else {
+          selectedMonth = null;
+        }
+      };
+    }
   }
 
-  displayEvents(filtered);
-}
+  function Aikavalinta(type) {
+    const startInput = document.getElementById(`aika${type.charAt(0).toUpperCase() + type.slice(1)}Al`);
+    const endInput = document.getElementById(`aika${type.charAt(0).toUpperCase() + type.slice(1)}Lo`);
 
-function Viikkonumero(date) {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const dayNum = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-}
-
-function Suodatin() {
-  document.getElementById("suodatin").classList.toggle("show");
-}
-
-function Suodatettukohta() {
-  var input = document.getElementById("Haku");
-  var filter = input.value.toUpperCase();
-  var filtered = events.filter(e => e.name.toUpperCase().indexOf(filter) > -1);
-  displayEvents(filtered);
-}
-
-document.getElementById("Haku").addEventListener("input", Suodatettukohta);
-
-function filterSelection(filter) {
-  var päiväRow = document.getElementById('päivä').closest('.Filter');
-  var viikkoRow = document.getElementById('viikko').closest('.Filter');
-  var kuukausiRow = document.getElementById('kuukausi').closest('.Filter');
-
-  var dayInput = document.getElementById('päivä-input');
-  var weekInput = document.getElementById('viikko-input');
-  var monthInput = document.getElementById('kuukausi-input');
-  var dayTimeA = document.getElementById('aika-päivä');
-  var weekTimeA = document.getElementById('aika-viikko');
-  var monthTimeA = document.getElementById('aika-kuukausi');
-
-  var timeInputs = [
-    document.getElementById('aika-päivä-al'),
-    document.getElementById('aika-päivä-lo'),
-    document.getElementById('aika-viikko-al'),
-    document.getElementById('aika-viikko-lo'),
-    document.getElementById('aika-kuukausi-al'),
-    document.getElementById('aika-kuukausi-lo')
-  ];
-
-  document.querySelectorAll('#suodatin .btn').forEach(function(b){ b.classList.remove('active'); });
-
-  dayInput.value = '';
-  weekInput.value = '';
-  monthInput.value = '';
-  timeInputs.forEach(i => { if(i) { i.value = ''; i.style.display = 'none'; } });
-
-  selectedDate = null;
-  selectedWeek = null;
-  selectedMonth = null;
-  startTime = null;
-  endTime = null;
-
-  dayInput.style.display = 'none';
-  weekInput.style.display = 'none';
-  monthInput.style.display = 'none';
-  [dayTimeA, weekTimeA, monthTimeA].forEach(b => { if(b) b.style.display = 'none'; });
-
-  if (filter === 'all' || filter === 'Näytä kaikki') {
-    päiväRow.style.display = 'flex';
-    viikkoRow.style.display = 'flex';
-    kuukausiRow.style.display = 'flex';
-  } else if (filter === 'Päivä') {
-    päiväRow.style.display = 'flex';
-    viikkoRow.style.display = 'none';
-    kuukausiRow.style.display = 'none';
-    dayInput.style.display = 'inline-block';
-    if (dayTimeA) dayTimeA.style.display = 'inline-block';
-  } else if (filter === 'Viikko') {
-    päiväRow.style.display = 'none';
-    viikkoRow.style.display = 'flex';
-    kuukausiRow.style.display = 'none';
-    weekInput.style.display = 'inline-block';
-    if (weekTimeA) weekTimeA.style.display = 'inline-block';
-  } else if (filter === 'Kuukausi') {
-    päiväRow.style.display = 'none';
-    viikkoRow.style.display = 'none';
-    kuukausiRow.style.display = 'flex';
-    monthInput.style.display = 'inline-block';
-    if (monthTimeA) monthTimeA.style.display = 'inline-block';
-  }
-
-  var allTopBtns = Array.from(document.querySelectorAll('#suodatin .btn'));
-  var matchText = (filter === 'all') ? 'Näytä kaikki' : filter;
-  var matchBtn = allTopBtns.find(b => b.textContent.trim() === matchText);
-  if (matchBtn) matchBtn.classList.add('active');
-
-  Suodatapäivällä();
-}
-
-function Aikavälilaitto(btnId, inputStartId, inputEndId) {
-  var btn = document.getElementById(btnId);
-  var inA = document.getElementById(inputStartId);
-  var inB = document.getElementById(inputEndId);
-  if (!btn || !inA || !inB) return;
-  btn.addEventListener('click', function(e){
-    e.preventDefault();
-    var show = inA.style.display !== 'inline-block';
+    const show = startInput.style.display !== 'inline-block';
     document.querySelectorAll('.time-picker').forEach(t => t.style.display = 'none');
-    inA.style.display = show ? 'inline-block' : 'none';
-    inB.style.display = show ? 'inline-block' : 'none';
-    if (show) {
-      setTimeout(()=>{ try { inA.focus(); } catch(e){} }, 10);
-    } else {
-      inA.value = ''; inB.value = '';
+    startInput.style.display = show ? 'inline-block' : 'none';
+    endInput.style.display = show ? 'inline-block' : 'none';
+
+    if (!show) {
+      startInput.value = '';
+      endInput.value = '';
       startTime = null;
       endTime = null;
+      return;
     }
-    Suodatapäivällä();
-  });
-}
 
-Aikavälilaitto('aika-päivä', 'aika-päivä-al', 'aika-päivä-lo');
-Aikavälilaitto('aika-viikko', 'aika-viikko-al', 'aika-viikko-lo');
-Aikavälilaitto('aika-kuukausi', 'aika-kuukausi-al', 'aika-kuukausi-lo');
+    startInput.onchange = function () {
+      startTime = this.value;
+    };
 
-function kalenteri(buttonId, inputId, filterName) {
-  const btn = document.getElementById(buttonId);
-  const input = document.getElementById(inputId);
-  if (!btn || !input) return;
+    endInput.onchange = function () {
+      endTime = this.value;
+    };
+  }
 
-  btn.addEventListener('click', function (e) {
-    e.preventDefault();
-    filterSelection(filterName);
-    setTimeout(() => {
-      try { input.focus(); } catch (err) {}
-      if (typeof input.showPicker === 'function') {
-        input.showPicker();
-      }
-    }, 10);
-  });
-
-  input.addEventListener('change', function() {
-    if (filterName === 'Päivä') selectedDate = this.value;
-    if (filterName === 'Viikko') selectedWeek = this.value;
-    if (filterName === 'Kuukausi') selectedMonth = this.value;
-    Suodatapäivällä();
-  });
-}
-
-kalenteri('päivä', 'päivä-input', 'Päivä');
-kalenteri('viikko', 'viikko-input', 'Viikko');
-kalenteri('kuukausi', 'kuukausi-input', 'Kuukausi');
-
-document.getElementById('aika-päivä-al').addEventListener('change', function() {
-  startTime = this.value;
-  Suodatapäivällä();
-});
-document.getElementById('aika-päivä-lo').addEventListener('change', function() {
-  endTime = this.value;
-  Suodatapäivällä();
-});
-document.getElementById('aika-viikko-al').addEventListener('change', function() {
-  startTime = this.value;
-  Suodatapäivällä();
-});
-document.getElementById('aika-viikko-lo').addEventListener('change', function() {
-  endTime = this.value;
-  Suodatapäivällä();
-});
-document.getElementById('aika-kuukausi-al').addEventListener('change', function() {
-  startTime = this.value;
-  Suodatapäivällä();
-});
-document.getElementById('aika-kuukausi-lo').addEventListener('change', function() {
-  endTime = this.value;
-  Suodatapäivällä();
-});
-
-displayEvents(events);
+  window.onclick = function (event) {
+    if (!event.target.matches('.dropbtn') && !event.target.closest('#dateDropdown')) {
+      document.getElementById('dateDropdown').classList.remove('show');
+    }
+  };
 </script>
+
 </body>
 </html>
-
