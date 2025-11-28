@@ -452,7 +452,8 @@ h1 {
           e.name.toLowerCase().includes(currentSearch.toLowerCase())
         );
       }
-
+      
+// ei toimi tapahtumissa joilla on tapahtum apäivä enemmän kuin 1
       if (selectedDate) {
         filtered = filtered.filter(e => {
           const eventDate = e.date.split(' ')[0];
