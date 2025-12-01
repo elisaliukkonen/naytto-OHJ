@@ -91,7 +91,7 @@
       el.style.display = 'none';
       el.value = '';
     });
-
+//Päivä valinta
     if (type === 'paiva') {
       const input = document.getElementById('paivaInput');
       input.style.display = 'inline-block';
@@ -106,7 +106,7 @@
         }
       };
     }
-
+//Viikko valinta
     if (type === 'viikko') {
       const input = document.getElementById('viikkoInput');
       input.style.display = 'inline-block';
@@ -116,7 +116,7 @@
         selectedWeek = this.value;
       };
     }
-
+//Kuukausi valinta
     if (type === 'kuukausi') {
       const input = document.getElementById('kuukausiInput');
       input.style.display = 'inline-block';
@@ -132,7 +132,7 @@
       };
     }
   }
-
+//Aika väli valinta
   function Aikavalinta(type) {
     const startInput = document.getElementById(`aika${type.charAt(0).toUpperCase() + type.slice(1)}Al`);
     const endInput = document.getElementById(`aika${type.charAt(0).toUpperCase() + type.slice(1)}Lo`);
@@ -168,3 +168,4 @@
 
 </body>
 </html>
+
