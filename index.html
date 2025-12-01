@@ -454,6 +454,7 @@ h1 {
       }
       
 // ei toimi tapahtumissa joilla on tapahtum apäivä enemmän kuin 1
+// voisiko tämä toimia? includes() tai some() tarkistamaan kaikki päivämäärät  ->  return eventDate === selectedDate muotoon return eventDates.includes(selectedDate);    
       if (selectedDate) {
         filtered = filtered.filter(e => {
           const eventDate = e.date.split(' ')[0];
