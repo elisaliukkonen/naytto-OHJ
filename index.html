@@ -331,6 +331,25 @@ h1 {
   </div>
 
   <script>
+    // Funktio päivämäärävälin käsittelyyn
+    function Paivavali(dateStr) {
+  if (dateStr.includes('-')) {
+    const [startStr, endStr] = dateStr.split('-');
+
+    const [startDay, startMonth] = startStr.split('.');
+    const [endDay, endMonth, endYear] = endStr.split('.');
+
+    const startDate = new Date(endYear, startMonth - 1, startDay);
+    const endDate = new Date(endYear, endMonth - 1, endDay);
+
+    return [startDate, endDate];
+  }
+
+  const [day, month, year] = dateStr.split('.');
+  const date = new Date(year, month - 1, day);
+  return [date, date];
+}
+
     const events = [
       {
       name: "Mikkelin ravit",
@@ -452,42 +471,55 @@ h1 {
           e.name.toLowerCase().includes(currentSearch.toLowerCase())
         );
       }
-      
-// ei toimi tapahtumissa joilla on tapahtum apäivä enemmän kuin 1
-// voisiko tämä toimia? includes() tai some() tarkistamaan kaikki päivämäärät  ->  return eventDate === selectedDate muotoon return eventDates.includes(selectedDate);    
-      if (selectedDate) {
+
+// Päivämäärä suodatus
+if (selectedDate) {
+  filtered = filtered.filter(e => {
+    const [start, end] = Paivavali(e.date);
+
+    const [sDay, sMonth, sYear] = selectedDate.split('.');
+    const selected = new Date(sYear, sMonth - 1, sDay);
+
+    return selected >= start && selected <= end;
+  });
+
+// Viikko suodatus
+} else if (selectedWeek) {
         filtered = filtered.filter(e => {
-          const eventDate = e.date.split(' ')[0];
-          return eventDate === selectedDate;
+          const [eventStart, eventEnd] = Paivavali(e.date);
+          
+          const [yearStr, weekStr] = selectedWeek.split('-W');
+          const year = parseInt(yearStr);
+          const week = parseInt(weekStr);
+
+          const simple = new Date(year, 0, 1 + (week - 1) * 7);
+          const dow = simple.getDay();
+          let isoWeekStart = simple;
+
+        if (dow <= 4 && dow > 0) {
+          isoWeekStart.setDate(simple.getDate() - (dow - 1)); 
+        } else {
+          isoWeekStart.setDate(simple.getDate() + (8 - dow)); 
+        }
+
+          const endDate = new Date(isoWeekStart);
+          endDate.setDate(isoWeekStart.getDate() + 6);
+
+          
+          return eventStart <= endDate && eventEnd >= isoWeekStart;
         });
-      } else if (selectedWeek) {
-        filtered = filtered.filter(e => {
-          const eventDateStr = e.date.split(' ')[0];
-          const [day, month, year] = eventDateStr.split('.');
-          const eventDate = new Date(year, month-1, day);
-          
-          const selectedWeekParts = selectedWeek.split('-W');
-          const yearNum = parseInt(selectedWeekParts[0]);
-          const weekNum = parseInt(selectedWeekParts[1]);
-          
-          const firstDayOfYear = new Date(yearNum, 0, 1);
-          const daysToFirstMonday = firstDayOfYear.getDay() === 0 ? 1 : 8 - firstDayOfYear.getDay();
-          const firstMonday = new Date(firstDayOfYear);
-          firstMonday.setDate(firstDayOfYear.getDate() + (firstDayOfYear.getDay() === 1 ? 0 : daysToFirstMonday));
-          
-          const startDate = new Date(firstMonday);
-          startDate.setDate(firstMonday.getDate() + (weekNum - 1) * 7);
-          const endDate = new Date(startDate);
-          endDate.setDate(startDate.getDate() + 6);
-          
-          return eventDate >= startDate && eventDate <= endDate;
-        });
+
+    // Kuukausi suodatus
       } else if (selectedMonth) {
         filtered = filtered.filter(e => {
-          const eventDateStr = e.date.split(' ')[0];
-          const [day, month, year] = eventDateStr.split('.');
-          const eventMonthYear = `${month}.${year}`;
-          return eventMonthYear === selectedMonth;
+            const [eventStart, eventEnd] = Paivavali(e.date);
+
+            const [sMonth, sYear] = selectedMonth.split('.');
+            const monthStart = new Date(sYear, sMonth - 1, 1);
+            const monthEnd = new Date(sYear, sMonth, 0);
+
+            return eventStart <= monthEnd && eventEnd >= monthStart;
+
         });
       }
 
@@ -553,6 +585,7 @@ h1 {
         el.value = '';
       });
 
+      // Päivä valinta
       if (type === 'paiva') {
         const input = document.getElementById('paivaInput');
         input.style.display = 'inline-block';
@@ -569,7 +602,11 @@ h1 {
         };
       }
 
+      // Viikko valinta
       if (type === 'viikko') {
+            selectedDate = null;  
+            selectedMonth = null;
+
         const input = document.getElementById('viikkoInput');
         input.style.display = 'inline-block';
         document.getElementById('aikaViikkoBtn').style.display = 'inline-block';
@@ -580,7 +617,10 @@ h1 {
         };
       }
 
+      // Kuukausi valinta
       if (type === 'kuukausi') {
+            selectedDate = null;  
+            selectedWeek = null;
         const input = document.getElementById('kuukausiInput');
         input.style.display = 'inline-block';
         document.getElementById('aikaKuukausiBtn').style.display = 'inline-block';
@@ -597,6 +637,7 @@ h1 {
       }
     }
 
+        // Aika valinta
     function Aikavalinta(type) {
       const startInput = document.getElementById(`aika${type.charAt(0).toUpperCase() + type.slice(1)}Al`);
       const endInput = document.getElementById(`aika${type.charAt(0).toUpperCase() + type.slice(1)}Lo`);
